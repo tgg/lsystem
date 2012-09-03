@@ -16,8 +16,8 @@ public:
   const std::string& evolve();
 
 private:
-  std::map<char, std::string> rules_;
   std::string current_;
+  rule_map rules_;
 };
 
 #endif // LSYSTEM_HH

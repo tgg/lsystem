@@ -1,36 +1,47 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 
+#include <functional>
 #include <algorithm>
 #include <utility>
 #include <cmath>
 
 #include "gl_renderer.hh"
 
-
-// Hackish way to get access to the renderer instance
-// from glut functions :(
-static gl_renderer* renderer;
+// !!! Hackish !!!
+// GLUT to gl_renderer methods routing
+// the functions are bound in the init method
+static std::function<void()> renderer_render;
+static std::function<void(int, int, int, int)> renderer_mouse_evt;
+static std::function<void(GLsizei, GLsizei)> renderer_reshape;
 
 static void mouseFunc(int button, int state, int x, int y)
 {
-  renderer->mouse_evt(button, state, x, y);
+  renderer_mouse_evt(button, state, x, y);
 }
 
 static void reshapeFunc(GLsizei width, GLsizei height)
 {
-  renderer->reshape(width, height);
+  renderer_reshape(width, height);
 }
 
 static void displayFunc()
 {
-  renderer->render();
+  renderer_render();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// GL RENDERER IMPLEMENTATION
+///////////////////////////////////////////////////////////////////////////////
 void
 gl_renderer::init(int argc, char* argv[])
 {
-  renderer = this;
+  using namespace std::placeholders;
+
+  // Bind global funcs to private member methods
+  renderer_render = std::bind(&gl_renderer::render, this);
+  renderer_mouse_evt = std::bind(&gl_renderer::mouse_evt, this, _1, _2, _3, _4);
+  renderer_reshape = std::bind(&gl_renderer::reshape, this, _1, _2);
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);

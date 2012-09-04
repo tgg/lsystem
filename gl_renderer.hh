@@ -19,18 +19,17 @@ public:
   void init(int argc, char* argv[]);
   void run();
 
-  // These methods should be private
-  // if it was possible to pass them to glut directly
-  void mouse_evt(int, int, int, int);
-  void reshape(GLsizei, GLsizei);
-  void render();
-
 private:
   void render_system();
   void forward();
   void rotate(float angle);
   void push_state();
   void pop_state();
+
+  // GLUT event functions
+  void mouse_evt(int, int, int, int);
+  void reshape(GLsizei, GLsizei);
+  void render();
 
 private:
   lsystem system_;

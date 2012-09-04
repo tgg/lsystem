@@ -1,13 +1,13 @@
 CXX = clang++
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++11 -Wall -Wextra -Werror -pedantic
 LDFLAGS = -lglut
 
-objects = main.o lsystem.o gl_renderer.o
+OBJECTS = main.o lsystem.o gl_renderer.o
 
-all:	$(objects)
+all:	$(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o lsystem 
 
 clean:
-	rm -f $(objects)
+	rm -f $(OBJECTS)
 	rm -f lsystem
 

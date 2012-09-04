@@ -1,10 +1,84 @@
 #include <GL/gl.h>
+#include <GL/glut.h>
 
 #include <algorithm>
 #include <utility>
 #include <cmath>
 
 #include "gl_renderer.hh"
+
+
+// Hackish way to get access to the renderer instance
+// from glut functions :(
+static gl_renderer* renderer;
+
+static void mouseFunc(int button, int state, int x, int y)
+{
+  renderer->mouse_evt(button, state, x, y);
+}
+
+static void reshapeFunc(GLsizei width, GLsizei height)
+{
+  renderer->reshape(width, height);
+}
+
+static void displayFunc()
+{
+  renderer->render();
+}
+
+void
+gl_renderer::init(int argc, char* argv[])
+{
+  renderer = this;
+
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
+  glutInitWindowSize(800, 800);
+  glutCreateWindow("LSystem");
+
+  glutMouseFunc(mouseFunc);
+  glutReshapeFunc(reshapeFunc);
+  glutDisplayFunc(displayFunc);
+}
+
+void
+gl_renderer::run()
+{
+  glutMainLoop();
+}
+
+void 
+gl_renderer::reshape(GLsizei width, GLsizei height)
+{
+  GLfloat aspect_ratio;
+  if (height == 0)
+    height = 1;        
+  glViewport(0, 0, width, height);
+        
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+        
+  aspect_ratio = (GLfloat)width / (GLfloat)height;
+  if (width <= height)
+    glOrtho (-100.0, 100.0,
+             -100 / aspect_ratio, 100.0 / aspect_ratio,
+             1.0, -1.0);
+  else
+    glOrtho(-100.0 * aspect_ratio, 100.0 * aspect_ratio, 
+            -100.0, 100.0, 
+            1.0, -1.0);
+        
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+}
+
+void 
+gl_renderer::mouse_evt(int, int state, int, int)
+{
+  if(GLUT_DOWN == state)
+    render();
+}
 
 void
 gl_renderer::render()

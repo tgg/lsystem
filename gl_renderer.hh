@@ -1,6 +1,8 @@
 #ifndef GL_RENDERER_HH
 #define GL_RENDERER_HH
 
+#include <GL/gl.h>
+
 #include <stack>
 #include <tuple>
 
@@ -14,6 +16,13 @@ public:
     : system_(system), config_(config)
   {}
 
+  void init(int argc, char* argv[]);
+  void run();
+
+  // These methods should be private
+  // if it was possible to pass them to glut directly
+  void mouse_evt(int, int, int, int);
+  void reshape(GLsizei, GLsizei);
   void render();
 
 private:

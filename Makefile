@@ -1,6 +1,6 @@
 CXX = clang++
 CXXFLAGS = -std=c++11 -Wall -Wextra -Werror -pedantic
-LDFLAGS = -lglut
+LDFLAGS = -lglut -lGL
 
 OBJECTS = main.o lsystem.o gl_renderer.o
 

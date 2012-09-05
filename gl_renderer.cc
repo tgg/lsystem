@@ -180,7 +180,7 @@ gl_renderer:: rotate(float angle)
     angle_ -= 360.0f;
 
   if(angle_ < 0.0f)
-    angle_ -= 0.0f;
+    angle_ += 360.0f;
 }
 
 void
